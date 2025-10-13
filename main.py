@@ -1,3 +1,4 @@
+import sys
 import pygame
 from constants import *
 from player import Player
@@ -21,13 +22,21 @@ def main():
 	field = AsteroidField()
 	player = Player(x, y)
 	while True:
+
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
 				return
 		screen.fill((0, 0, 0))
+
 		for sprite in drawable:
 			sprite.draw(screen)
 		updatable.update(dt)
+
+		for a in asteroids:
+			if a.collision(player) == True:
+				print("Game over!")
+				sys.exit()
+
 		pygame.display.flip()
 		ms = clock.tick(60)
 		dt = ms / 1000
