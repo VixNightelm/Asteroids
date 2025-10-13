@@ -52,7 +52,7 @@ def main():
 				sys.exit()
 			for s in shots:
 				if a.collision(s) == True:
-					a.kill()
+					a.split()
 					s.kill()
 		pygame.display.flip()
 		ms = clock.tick(60)
