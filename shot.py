@@ -16,3 +16,7 @@ class Shot(CircleShape):
 		self.duration -= dt
 		if self.duration <= 0:
 			self.kill()
+		if self.position.x >= SCREEN_WIDTH or self.position.x <= 0:
+			self.kill()
+		if self.position.y >= SCREEN_HEIGHT or self.position.y <= 0:
+			self.kill()
