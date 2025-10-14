@@ -43,6 +43,16 @@ def main():
 
 		for sprite in drawable:
 			sprite.draw(screen)
+
+		for u in drawable:
+			if u.position.x >= SCREEN_WIDTH:
+				u.position.x = 1
+			if u.position.x <= 0:
+				u.position.x = SCREEN_WIDTH
+			if u.position.y >= SCREEN_HEIGHT:
+				u.position.y = 1
+			if u.position.y <= 0:
+				u.position.y = SCREEN_HEIGHT
 		updatable.update(dt)
 
 
