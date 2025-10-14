@@ -1,11 +1,12 @@
 import sys
+import random
 import pygame
 from constants import *
 from player import Player
 from asteroid import Asteroid
 from asteroidfield import AsteroidField
 from shot import Shot
-
+from explosion import Particle
 
 
 def main():
@@ -13,10 +14,12 @@ def main():
 #
 	pygame.init()
 	screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+	pygame.display.set_caption("Asteroids")
 	pygame.font.init()
 	dt = 0
 	x = SCREEN_WIDTH / 2
 	y = SCREEN_HEIGHT / 2
+
 #groups
 	updatable = pygame.sprite.Group()
 	drawable = pygame.sprite.Group()
@@ -40,7 +43,7 @@ def main():
 	running = True
 	background = pygame.image.load("./images/stars.jpg").convert()
 	background = pygame.transform.scale(background, (SCREEN_WIDTH, SCREEN_HEIGHT))
-
+	particles = []
 
 #screens
 
@@ -132,6 +135,15 @@ def main():
 						a.split()
 						s.kill()
 						score += 5
+						lifetime = 0.5
+						for i in range(15):
+							particles.append(Particle(a.position.x, a.position.y, lifetime))
+
+			for particle in particles[:]:
+				particle.update(dt)
+				particle.draw(screen)
+				if particle.lifetime <= 0:
+					particles.remove(particle)
 
 			score_surface = font.render(f"Score: {score}", True, (255, 255, 255))
 			lives_text = font.render(f"Lives: {lives}", True, (255, 255, 255))
