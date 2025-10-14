@@ -11,8 +11,8 @@ from shot import Shot
 def main():
 
 #
-	screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 	pygame.init()
+	screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 	pygame.font.init()
 	dt = 0
 	x = SCREEN_WIDTH / 2
@@ -38,6 +38,8 @@ def main():
 	lives = 5
 	game_state = "start_menu"
 	running = True
+	background = pygame.image.load("./images/stars.jpg").convert()
+	background = pygame.transform.scale(background, (SCREEN_WIDTH, SCREEN_HEIGHT))
 
 
 #screens
@@ -92,6 +94,7 @@ def main():
 
 		elif game_state == "game":
 			screen.fill((0, 0, 0))
+			screen.blit(background, (0, 0))
 			for sprite in drawable:
 				sprite.draw(screen)
 
