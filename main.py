@@ -51,12 +51,27 @@ def main():
 		screen.blit(start_button, (SCREEN_WIDTH/2 - start_button.get_width()/2, SCREEN_HEIGHT/2 + start_button.get_height()/2))
 		pygame.display.flip()
 
+	def draw_game_over_screen():
+		screen.fill((0, 0, 0))
+		font = pygame.font.SysFont('arial', 40)
+		title = font.render('Game Over', True, (255, 255, 255))
+		restart = font.render('R - Restart', True, (255, 255, 255))
+		quit = font.render('Q - Quit', True, (255, 255, 255))
+		final_score = font.render(f'Final Score: {score}', True, (255, 255, 255))
+		screen.blit(title, (SCREEN_WIDTH/2 - title.get_width()/2, SCREEN_HEIGHT/2 - title.get_height()/3))
+		screen.blit(restart, (SCREEN_WIDTH/2 - restart.get_width()/2, SCREEN_HEIGHT/1.9 + restart.get_height()))
+		screen.blit(quit, (SCREEN_WIDTH/2 - quit.get_width()/2, SCREEN_HEIGHT/2 + quit.get_height()/2))
+		screen.blit(final_score, (SCREEN_WIDTH/2 - final_score.get_width()/2, SCREEN_HEIGHT/2 + final_score.get_height()*2.5))
+		pygame.display.flip()
+
+
 #game code
 	while running:
 
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
 				running = False
+
 		if game_state == "start_menu":
 			draw_start_menu()
 			keys = pygame.key.get_pressed()
@@ -64,8 +79,18 @@ def main():
 				game_state = "game"
 				game_over = False
 
-		elif game_state == "game":
+		elif game_state == "game_over":
+			draw_game_over_screen()
+			keys = pygame.key.get_pressed()
+			if keys[pygame.K_r]:
+				game_state = "start_menu"
+				lives = 5
+				score = 0
+			elif keys[pygame.K_q]:
+				pygame.quit()
+				quit()
 
+		elif game_state == "game":
 			screen.fill((0, 0, 0))
 			for sprite in drawable:
 				sprite.draw(screen)
@@ -93,15 +118,17 @@ def main():
 					player.position.x = x
 					player.position.y = y
 				elif a.collision(player) == True and (lives <= 0) == True:
-					print("Game Over!")
-					sys.exit()
+					for a in asteroids:
+						a.kill()
+					player.position.x = x
+					player.position.y = y
+					game_over = True
+					game_state = "game_over"
 				for s in shots:
 					if a.collision(s) == True:
 						a.split()
 						s.kill()
 						score += 5
-
-
 
 			score_surface = font.render(f"Score: {score}", True, (255, 255, 255))
 			lives_text = font.render(f"Lives: {lives}", True, (255, 255, 255))
@@ -111,6 +138,11 @@ def main():
 			pygame.display.flip()
 			ms = clock.tick(60)
 			dt = ms / 1000
+
+		elif game_over:
+			game_state = "game_over"
+			game_over = False
+
 
 #	print("Starting Asteroids!")
 #	print(f"Screen width: {SCREEN_WIDTH}")
